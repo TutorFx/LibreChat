@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { FetchError } from 'ofetch'
+import { generateText } from 'ai'
 
 export default defineNitroPlugin(async (_nitroApp) => {
   if (import.meta.prerender) return
@@ -13,6 +14,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
     redis: false,
     ollama: false,
     kokoro: false,
+    gemini: false,
     audio: false
   }
 
@@ -91,10 +93,33 @@ export default defineNitroPlugin(async (_nitroApp) => {
     }
   }
 
+  const checkGemini = async () => {
+    if (!config.gemini.apiKey) {
+      log.info('[Gemini] API key not found. Service disabled.')
+      return
+    }
+
+    try {
+      const google = useGemini()
+      await generateText({
+        model: google('gemini-flash-latest'),
+        prompt: 'hello'
+      })
+      log.info('[Gemini] API key valid. Service enabled.')
+      if (globalThis.__SERVICES_STATUS__) {
+        globalThis.__SERVICES_STATUS__.gemini = true
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      log.warn('[Gemini] API key validation failed:', message)
+    }
+  }
+
   await Promise.all([
     checkDatabase(),
     checkRedis(),
     checkOllama(),
-    checkKokoro()
+    checkKokoro(),
+    checkGemini()
   ])
 })

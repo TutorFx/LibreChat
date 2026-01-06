@@ -20,7 +20,7 @@ const { audioEnabled } = useAudioSettings()
 const { isListening, isSupported, toggle } = useMic({
   onResult: (text) => {
     input.value = input.value ? `${input.value} ${text}` : text
-    chat.stop()
+    chat.value.stop()
     clearQueue()
     debouncedFn()
   }
@@ -29,7 +29,7 @@ const { isListening, isSupported, toggle } = useMic({
 const debouncedFn = useDebounceFn(() => {
   initContext()
   if (input.value.trim()) {
-    chat.sendMessage({
+    chat.value.sendMessage({
       text: input.value
     })
     input.value = ''
@@ -46,11 +46,11 @@ if (!data.value) {
 
 const input = ref('')
 
-const chat = new Chat({
-  id: data.value.id,
-  messages: data.value.messages,
+const chat = computed(() => new Chat({
+  id: data.value?.id,
+  messages: data.value?.messages,
   transport: new DefaultChatTransport({
-    api: `/api/chats/${data.value.id}`,
+    api: `/api/chats/${data.value?.id}`,
     body: {
       model: model.value,
       audio: audioEnabled.value
@@ -73,13 +73,13 @@ const chat = new Chat({
       duration: 0
     })
   }
-})
+}))
 
 function handleSubmit(e: Event) {
   e.preventDefault()
   initContext()
   if (input.value.trim()) {
-    chat.sendMessage({
+    chat.value.sendMessage({
       text: input.value
     })
     input.value = ''
@@ -101,7 +101,7 @@ function copy(e: MouseEvent, message: UIMessage) {
 onMounted(() => {
   initContext()
   if (data.value?.messages.length === 1) {
-    chat.regenerate()
+    chat.value.regenerate()
   }
 })
 </script>

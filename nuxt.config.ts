@@ -33,6 +33,9 @@ export default defineNuxtConfig({
     ollama: {
       baseUrl: process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434/api'
     },
+    gemini: {
+      apiKey: process.env.GEMINI_API_KEY
+    },
     kokoro: {
       apiUrl: process.env.KOKORO_API_URL
     },

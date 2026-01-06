@@ -17,6 +17,7 @@ declare global {
     redis: boolean
     ollama: boolean
     kokoro: boolean
+    gemini: boolean
     audio: boolean
   }
   var __SERVICES_STATUS__: ServicesStatus | undefined

@@ -11,22 +11,23 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)
-  const ollama = useOllama()
   const sources = new Map<number, DeltaType>()
 
   const { id } = await getValidatedRouterParams(event, z.object({
     id: z.string()
   }).parse)
 
-  const { kokoro: isKokoroFeatureEnabled } = useServerFeatures()
-
   const { model, messages, audio } = await readValidatedBody(event, z.object({
-    model: z.string(),
+    model: modelValidatorSchema,
     messages: z.array(z.custom<UIMessage>()),
     audio: z.boolean().default(false)
   }).parse)
 
-  const llm = ollama(model)
+  console.log(model)
+
+  const { kokoro: isKokoroFeatureEnabled } = useServerFeatures()
+  const [provider, modelId] = model.split('/') as [AiProvider, string]
+  const llm = getProvider(provider)
 
   const db = useDrizzle()
 
@@ -42,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
   if (!chat.title) {
     const { text: title } = await generateText({
-      model: llm,
+      model: llm(modelId),
       system: `You are a title generator for a chat:
           - Generate a short title based on the first user's message
           - The title should be less than 30 characters long
@@ -68,14 +69,14 @@ export default defineEventHandler(async (event) => {
 
   const questions = await generateObject({
     messages: convertToModelMessages(messages),
-    system: `Lista perguntas curtas (≤8 palavras) com termos técnicos/números não explicados no contexto.
-      Uma por linha.`,
+    system: `Lista perguntas curtas (≤8 palavras) com termos técnicos/números não explicados
+      no contexto essenciais para responder a próxima pergunta.`,
     schema: z.object({
       questions: z.array(
         z.string().describe('perguntas')
-      ).min(0).max(6).describe('Lista de perguntas')
+      ).min(0).max(6).describe('Lista de no máximo 6 perguntas')
     }),
-    model: llm
+    model: llm(modelId)
   })
 
   const chunks = await embed.findSimilarChunksAsContext(
@@ -93,7 +94,7 @@ export default defineEventHandler(async (event) => {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const result = streamText({
-        model: llm,
+        model: llm(modelId),
         system: /* xml */`
 <system_configuration>
   <agent_profile>
@@ -128,7 +129,7 @@ export default defineEventHandler(async (event) => {
 </system_configuration>
 /think`,
         messages: convertToModelMessages(messages),
-        stopWhen: stepCountIs(3),
+        stopWhen: stepCountIs(2),
         experimental_transform: smoothStream({ chunking: 'word' }),
         tools: {
           search: searchTool({
@@ -140,7 +141,7 @@ export default defineEventHandler(async (event) => {
             }
           })
         },
-        toolChoice: 'required'
+        toolChoice: 'auto'
       })
 
       if (!chat.title) {
