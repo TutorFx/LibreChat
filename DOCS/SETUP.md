@@ -1,6 +1,6 @@
 # Setup & Installation
 
-Follow these steps to set up **Diamond LLM** in your local environment.
+Follow these steps to set up **LibreChat** in your local environment.
 
 ## 📋 Prerequisites
 
@@ -15,10 +15,10 @@ Ensure you have the following installed:
 
 ```bash
 # Clone repository
-git clone https://github.com/TutorFx/diamondlm.git
+git clone https://github.com/TutorFx/librechat.git
 
 # Enter project directory
-cd diamond-llm
+cd librechat
 
 # Install dependencies
 bun install
@@ -94,7 +94,7 @@ Start the development server.
 bun run dev
 ```
 
-Visit `http://localhost:3000` to start using Diamond LLM.
+Visit `http://localhost:3000` to start using LibreChat.
 
 ## 🏗️ Production Build
 

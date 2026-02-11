@@ -21,10 +21,10 @@ useHead({
       <AuthLogin @submit="() => { navigateTo(`/`) }">
         <template #description>
           <div class="grid grid-flow-row place-items-center gap-2">
-            <img src="/icon-atlas-branco.svg" alt="Logo" class="h-14 my-6">
+            <!-- Icon removed -->
 
             <h1 class="text-3xl font-semibold text-default">
-              Bem-vindo ao <span class="text-primary">atlas</span>
+              Bem-vindo ao <span class="text-primary">LibreChat</span>
             </h1>
 
             <p class="text-sm text-default">

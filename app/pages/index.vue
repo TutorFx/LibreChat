@@ -83,10 +83,7 @@ const topicCards = [
               delay: 0.1
             }"
           >
-            <div class="flex items-center justify-center gap-2 mb-2 md:mb-6">
-              <img src="/icon-atlas.svg" class="h-28 block dark:hidden">
-              <img src="/icon-atlas-branco.svg" class="h-28 hidden dark:block">
-            </div>
+            <div class="flex items-center justify-center gap-2 mb-2 md:mb-6" />
           </Motion>
 
           <Motion
@@ -106,7 +103,7 @@ const topicCards = [
             }"
           >
             <h2 class="text-lg md:text-xl text-accent max-sm:hidden">
-              Bem-vindo ao Atlas
+              Bem-vindo ao LibreChat
             </h2>
           </Motion>
 
