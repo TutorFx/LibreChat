@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { LazyModalConfirm } from '#components'
 import type { NavigationMenuItem } from '@nuxt/ui'
-import { formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 
 const route = useRoute()
 const toast = useToast()
@@ -17,8 +15,6 @@ const deleteModal = overlay.create(LazyModalConfirm, {
     description: 'Are you sure you want to delete this chat? This cannot be undone.'
   }
 })
-
-const { data: status } = await useFetch('/api/status/last-updated')
 
 const { data: chats, refresh: refreshChats } = await useFetch('/api/chats', {
   key: 'chats',
@@ -46,56 +42,6 @@ watch(loggedIn, () => {
 })
 
 const { groups } = useChats(chats)
-
-const footerLinks = computed<NavigationMenuItem[][]>(() => [
-  [
-    {
-      id: 'links-label',
-      label: 'Links',
-      type: 'label'
-    },
-    {
-      id: 'help',
-      label: 'Acesso Rápido',
-      icon: 'lucide:fast-forward',
-      children: [
-        {
-          id: 'ppt-template',
-          label: 'Template PPT',
-          icon: 'i-lucide-presentation',
-          to: '/downloads/Exemplo.pptx'
-        },
-        {
-          id: 'letterhead',
-          label: 'Papel Timbrado',
-          icon: 'i-lucide-file-text',
-          to: '/downloads/papel timbrado implanta.docx'
-        },
-        {
-          id: 'company-policies',
-          label: 'Plataforma Vibe',
-          icon: 'i-lucide-clock',
-          href: 'https://aliare.vibe.gp/',
-          target: '_blank'
-        },
-        {
-          id: 'support-platform',
-          label: 'Plataforma Feedz',
-          icon: 'i-lucide-ticket',
-          href: 'https://app.feedz.com.br/',
-          target: '_blank'
-        }
-      ]
-    }
-  ]
-])
-
-const lastUpdated = computed(() => {
-  if (!status.value?.updatedAt) {
-    return null
-  }
-  return formatDistanceToNow(new Date(status.value.updatedAt), { addSuffix: true, locale: ptBR })
-})
 
 const items = computed(() => groups.value?.flatMap((group) => {
   return [{
@@ -176,7 +122,7 @@ onMounted(async () => {
       <template #header="{ collapsed }">
         <NuxtLink to="/" class="flex items-end gap-1">
           <Logo class="h-8 w-auto shrink-0 relative transition duration-300" :class="{ 'translate-x-1': collapsed }" />
-          <span v-if="!collapsed" class="text-xl font-bold text-highlighted">Atlas</span>
+          <span v-if="!collapsed" class="text-xl font-bold text-highlighted">LibreChat</span>
         </NuxtLink>
 
         <div v-if="!collapsed" class="flex items-center gap-1.5 ms-auto">
@@ -226,30 +172,6 @@ onMounted(async () => {
 
       <template #footer="{ collapsed }">
         <div class="grid w-full gap-3">
-          <UNavigationMenu
-            :items="footerLinks"
-            :collapsed="collapsed"
-            tooltip
-            popover
-            orientation="vertical"
-            :ui="{ link: 'overflow-hidden' }"
-          />
-          <UCard
-            v-if="!collapsed && lastUpdated"
-            :ui="{ header: 'grid grid-flow-col gap-2 justify-center items-center p-3' }"
-          >
-            <template #header>
-              <UIcon name="lucide:refresh-cw" class="text-warning text-lg" />
-              <div class="text-xs text-muted text-balance">
-                <span>
-                  Última atualização da base:
-                </span>
-                <span class="text-default">
-                  {{ lastUpdated }}
-                </span>
-              </div>
-            </template>
-          </UCard>
           <USeparator />
           <UserMenu v-if="loggedIn" :collapsed="collapsed" />
           <ModalAuth v-else>

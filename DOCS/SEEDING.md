@@ -47,7 +47,7 @@ Define your initial super-admins in `seed/admins.json`. These users are automati
   "admins": [
     {
       "name": "System Admin",
-      "email": "admin@diamond.com",
+      "email": "admin@libre.com",
       "password": "strong-password-here"
     }
   ]

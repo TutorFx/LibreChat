@@ -10,7 +10,7 @@ Power organization-level access control and team management.
 - **Isolation**: Guides and Chats belonging to a group are invisible to others (unless global).
 
 ### Permissions (ACL)
-Diamond LLM uses a granular permission bitmask system.
+LibreChat uses a granular permission bitmask system.
 
 | Permission | Description |
 |------------|-------------|

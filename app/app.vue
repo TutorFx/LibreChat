@@ -14,7 +14,7 @@ useHead({
   ]
 })
 
-const title = 'DiamondLM'
+const title = 'LibreChat'
 const description = 'Chatbot de AI com RAG.'
 
 useSeoMeta({

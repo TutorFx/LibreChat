@@ -1,6 +1,6 @@
 # Retrieval-Augmented Generation (RAG)
 
-Diamond LLM uses a specialized RAG system to deliver context-aware answers from your internal documentation.
+LibreChat uses a specialized RAG system to deliver context-aware answers from your internal documentation.
 
 ## 🧩 Architecture
 
@@ -29,7 +29,7 @@ graph LR
 ## ✨ Key Features
 
 ### 🔍 Dual-Layer Retrieval
-Diamond LLM combines two powerful retrieval strategies:
+LibreChat combines two powerful retrieval strategies:
 1.  **Proactive Search**: Before the LLM starts, the system analyzes the user's intent, generates targeted questions, and fetches relevant documentation.
 2.  **Agentic Search (Tools)**: The LLM is equipped with a `search` tool. If the initial context is insufficient, it acts as an agent, autonomously querying the database for more specific information.
 

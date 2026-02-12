@@ -1,6 +1,6 @@
 # Audio & Voice Capabilities
 
-Diamond LLM features a high-fidelity audio system for Text-to-Speech (TTS) interactions, powered by **Kokoro**.
+LibreChat features a high-fidelity audio system for Text-to-Speech (TTS) interactions, powered by **Kokoro**.
 
 ## 🔈 Text-to-Speech (TTS)
 
